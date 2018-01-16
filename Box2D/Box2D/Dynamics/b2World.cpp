@@ -924,13 +924,6 @@ void b2World::Step(float32 dt, int32 velocityIterations, int32 positionIteration
 
 	step.warmStarting = m_warmStarting;
 	
-	// Update contacts. This is where some contacts are destroyed.
-	{
-		b2Timer timer;
-		m_contactManager.Collide();
-		m_profile.collide = timer.GetMilliseconds();
-	}
-
 	// Integrate velocities, solve velocity constraints, and integrate positions.
 	if (m_stepComplete && step.dt > 0.0f)
 	{
@@ -938,6 +931,14 @@ void b2World::Step(float32 dt, int32 velocityIterations, int32 positionIteration
 		Solve(step);
 		m_profile.solve = timer.GetMilliseconds();
 	}
+
+	// Update contacts. This is where some contacts are destroyed.
+	{
+		b2Timer timer;
+		m_contactManager.Collide();
+		m_profile.collide = timer.GetMilliseconds();
+	}
+
 
 	// Handle TOI events.
 	if (m_continuousPhysics && step.dt > 0.0f)
